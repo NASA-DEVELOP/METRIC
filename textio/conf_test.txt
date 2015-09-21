@@ -1,0 +1,8 @@
+param_name                     ; param_type         ; param_value
+int                            ; <type 'int'>       ; 1
+float                          ; <type 'float'>     ; 1.12345
+long                           ; <type 'long'>      ; 100000000000000000000000
+complex                        ; <type 'complex'>   ; (1+1j)
+bool                           ; <type 'bool'>      ; True
+str                            ; <type 'str'>       ; test string
+outfilepath                    ; <type 'str'>       ; some filepath on my hard drive
