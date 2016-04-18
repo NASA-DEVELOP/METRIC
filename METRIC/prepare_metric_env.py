@@ -131,7 +131,8 @@ def prepare_metric_env(workspace, landsat_band2, landsat_band3, landsat_band4, l
     for i,band in enumerate(bands):
 
         if clip_extent is None:
-            copyfile(band + ".ovr", landsat_dir, workspace)
+            if os.path.exists(band + ".ovr"):
+                copyfile(band + ".ovr", landsat_dir, workspace)
             bands[i] = copyfile(band, landsat_dir, workspace)
 
         else:
