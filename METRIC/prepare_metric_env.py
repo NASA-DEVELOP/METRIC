@@ -110,6 +110,8 @@ def prepare_metric_env(workspace, landsat_band2, landsat_band3, landsat_band4, l
         head, tail = os.path.split(live_path)
         template_path = os.path.join(head, "Empty_Metric_Model")
         shutil.copytree(template_path, workspace)
+    else:
+        raise Exception("input workspace must be a directory that does not already exist! one will be created here!")
 
 
     # set other inferred attributes of the working directory structure
