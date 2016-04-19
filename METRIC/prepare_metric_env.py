@@ -159,17 +159,17 @@ def prepare_metric_env(workspace, landsat_band2, landsat_band3, landsat_band4, l
 
 
     # moves the shapefiles for hot and cold pixels, and clip extent.
-    extensions = [".cpg", ".dbf", ".prj", ".sbn", ".sbx", ".shx"]
+    extensions = [".cpg", ".dbf", ".prj", ".sbn", ".sbx", ".shx", ".shp"]
 
     for extension in extensions:
         copyfile(hot_shape_path.replace(".shp", extension), ref_pixel_dir, workspace)
         copyfile(cold_shape_path.replace(".shp", extension), ref_pixel_dir, workspace)
-        copyfile(clip_extent.replace(".shp", extension), dem_dir, workspace)
+        if clip_extent is not None:
+            copyfile(clip_extent.replace(".shp", extension), dem_dir, workspace)
 
-    hot_shape_path = copyfile(hot_shape_path, ref_pixel_dir, workspace)
-    cold_shape_path = copyfile(cold_shape_path, ref_pixel_dir, workspace)
-    clip_extent = copyfile(clip_extent, dem_dir, workspace)
-
+    #hot_shape_path = copyfile(hot_shape_path, ref_pixel_dir, workspace)
+    #cold_shape_path = copyfile(cold_shape_path, ref_pixel_dir, workspace)
+    #clip_extent = copyfile(clip_extent, dem_dir, workspace)
 
     # move the weather data
     wx_filepath = copyfile(wx_filepath, weather_dir, workspace)
