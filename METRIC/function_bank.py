@@ -2,7 +2,7 @@ import arcpy
 import math
 if arcpy.CheckExtension("Spatial")== "Available":
     arcpy.CheckOutExtension("Spatial")
-    from arcpy.sa import *
+    from arcpy.sa import Con, Float, ATan, Plus, Ln
 else:
     arcpy.AddError("You do not have the Spatial Analyst Extension, and therefore cannot use this tool.")
 arcpy.env.overwriteOutput= True
