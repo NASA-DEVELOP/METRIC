@@ -32,7 +32,8 @@ def copyfile(path, dest_dir, workspace = ""):
         return destination.replace(workspace + "\\", "")
 
     else:
-        raise IOError("{0} is an invalid filepath!".format(path))
+        print("{0} is an invalid filepath!".format(path))
+        return None
 
 
 def clip_inputs(raster, shapefile, outpath):
@@ -110,6 +111,8 @@ def prepare_metric_env(workspace, landsat_band2, landsat_band3, landsat_band4, l
         head, tail = os.path.split(live_path)
         template_path = os.path.join(head, "Empty_Metric_Model")
         shutil.copytree(template_path, workspace)
+    else:
+        raise Exception("input workspace must be a directory that does not already exist! one will be created here!")
 
 
     # set other inferred attributes of the working directory structure
@@ -131,7 +134,8 @@ def prepare_metric_env(workspace, landsat_band2, landsat_band3, landsat_band4, l
     for i,band in enumerate(bands):
 
         if clip_extent is None:
-            copyfile(band + ".ovr", landsat_dir, workspace)
+            if os.path.exists(band + ".ovr"):
+                copyfile(band + ".ovr", landsat_dir, workspace)
             bands[i] = copyfile(band, landsat_dir, workspace)
 
         else:
@@ -141,10 +145,11 @@ def prepare_metric_env(workspace, landsat_band2, landsat_band3, landsat_band4, l
 
 
     # move the DEM and associated files
-    copyfile(dem_path + ".ovr", dem_dir, workspace)
-    copyfile(dem_path + ".aux.xml", dem_dir, workspace)
-    copyfile(dem_path + ".xml", dem_dir, workspace)
-    copyfile(dem_path.replace(".tif", ".tfw"), dem_dir, workspace)
+    for demfile in [dem_path + ext for ext in [".ovr", ".aux.xml", ".xml"]]:
+        if os.path.exists(demfile):
+            copyfile(dem_path + ".ovr", dem_dir, workspace)
+    if os.path.exists(dem_path.replace(".tif", ".tfw")):
+        copyfile(dem_path.replace(".tif", ".tfw"), dem_dir, workspace)
 
     if clip_extent is None:
         dem_path = copyfile(dem_path, dem_dir, workspace)
@@ -154,17 +159,17 @@ def prepare_metric_env(workspace, landsat_band2, landsat_band3, landsat_band4, l
 
 
     # moves the shapefiles for hot and cold pixels, and clip extent.
-    extensions = [".cpg", ".dbf", ".prj", ".sbn", ".sbx", ".shx"]
+    extensions = [".cpg", ".dbf", ".prj", ".sbn", ".sbx", ".shx", ".shp"]
 
     for extension in extensions:
         copyfile(hot_shape_path.replace(".shp", extension), ref_pixel_dir, workspace)
         copyfile(cold_shape_path.replace(".shp", extension), ref_pixel_dir, workspace)
-        copyfile(clip_extent.replace(".shp", extension), dem_dir, workspace)
+        if clip_extent is not None:
+            copyfile(clip_extent.replace(".shp", extension), dem_dir, workspace)
 
-    hot_shape_path = copyfile(hot_shape_path, ref_pixel_dir, workspace)
-    cold_shape_path = copyfile(cold_shape_path, ref_pixel_dir, workspace)
-    clip_extent = copyfile(clip_extent, dem_dir, workspace)
-
+    #hot_shape_path = copyfile(hot_shape_path, ref_pixel_dir, workspace)
+    #cold_shape_path = copyfile(cold_shape_path, ref_pixel_dir, workspace)
+    #clip_extent = copyfile(clip_extent, dem_dir, workspace)
 
     # move the weather data
     wx_filepath = copyfile(wx_filepath, weather_dir, workspace)
